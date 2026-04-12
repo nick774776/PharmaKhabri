@@ -1,0 +1,50 @@
+const Parser = require('rss-parser');
+const md5    = require('md5');
+ 
+const parser = new Parser({ timeout: 10000 });
+ 
+const RSS_FEEDS = [
+  { url: 'https://www.fiercepharma.com/rss/xml',          source: 'FiercePharma'   },
+  { url: 'https://www.pharmatimes.com/rss.aspx',          source: 'PharmaTimes'    },
+  { url: 'https://www.biopharmadive.com/feeds/news/',     source: 'BioPharma Dive' },
+  { url: 'https://www.who.int/rss-feeds/news-english.xml',source: 'WHO'            },
+  { url: 'https://pubmed.ncbi.nlm.nih.gov/rss/search/pharma/?limit=20', source: 'PubMed' },
+];
+ 
+function categorize(text = "") {
+  const t = text.toLowerCase();
+  const cats = [];
+  if (/\bfda\b|approval|cleared|authorized/.test(t))         cats.push('fda');
+  if (/clinical trial|phase [123]|\bict\b|study/.test(t))    cats.push('clinical-trials');
+  if (/biotech|biologic|mab\b|gene therapy/.test(t))          cats.push('biotech');
+  if (/regulation|policy|guideline|compliance/.test(t))        cats.push('regulations');
+  return cats.length ? cats : ['general'];
+}
+ 
+async function fetchRSSFeeds() {
+  const results = [];
+  for (const feed of RSS_FEEDS) {
+    try {
+      const data = await parser.parseURL(feed.url);
+      for (const item of data.items) {
+        if (!item.title || !item.link) continue;
+        const norm = {
+          title:       item.title.trim(),
+          description: item.contentSnippet || item.summary || "",
+          url:         item.link,
+          contentHash: md5(`${item.title.trim()}${feed.source}`),
+          source:      feed.source,
+          category:    categorize(`${item.title} ${item.contentSnippet || ""}`),
+          image:       item.enclosure?.url || item["media:content"]?.$.url || null,
+          publishedAt: new Date(item.pubDate || item.isoDate || Date.now()),
+        };
+        results.push(norm);
+      }
+    } catch (err) {
+      console.warn(`RSS fetch failed [${feed.source}]: ${err.message}`);
+    }
+  }
+  return results;
+}
+ 
+module.exports = { fetchRSSFeeds };

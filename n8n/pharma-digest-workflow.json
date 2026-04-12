@@ -1,0 +1,65 @@
+{
+  "name": "Pharma News Daily Digest",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [{ "field": "cronExpression", "expression": "0 8 * * *" }] }
+      },
+      "name": "Cron — 8AM Daily",
+      "type": "n8n-nodes-base.cron",
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.BACKEND_URL }}/news",
+        "qs": { "limit": 10, "sort": "publishedAt" }
+      },
+      "name": "Fetch Top 10 News",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.BACKEND_URL }}/subscribers/active"
+      },
+      "name": "Fetch Verified Subscribers",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const articles = $node[\"Fetch Top 10 News\"].json.data;\nconst subs = $node[\"Fetch Verified Subscribers\"].json;\n// Group: send all articles to users with no prefs; else filter\nreturn subs.map(sub => ({\n  json: {\n    email: sub.email,\n    unsubToken: sub.unsubscribeToken,\n    articles: sub.preferences?.categories?.length\n      ? articles.filter(a =>\n          a.category.some(c => sub.preferences.categories.includes(c)))\n      : articles,\n  }\n}));"
+      },
+      "name": "Group by Preferences",
+      "type": "n8n-nodes-base.function",
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [1080, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.SMTP_USER }}",
+        "toEmail":   "={{ $json.email }}",
+        "subject":   "💊 Top Pharma News Today — {{ $now.toFormat(\"MMM d, yyyy\") }}",
+        "emailType": "html",
+        "html": "<div style=\"font-family:Arial,sans-serif;max-width:600px;margin:auto;\">\n<h2 style=\"color:#1E3A5F;\">💊 PharmaNews Daily Digest</h2>\n<p style=\"color:#666;\">Your top headlines for {{ $now.toFormat('MMM d') }}</p>\n<hr style=\"border:1px solid #eee;\"/>\n{{ $json.articles.map((a,i) => `\n  <div style=\"padding:12px 0;border-bottom:1px solid #f0f0f0;\">\n    <a href=\"${a.url}\" style=\"color:#2196F3;font-weight:600;\">\n      ${i+1}. ${a.title}\n    </a>\n    <p style=\"color:#888;font-size:13px;margin:4px 0;\">\n      ${a.source} · ${new Date(a.publishedAt).toLocaleDateString()}\n    </p>\n    ${a.aiSummary ? `<p style=\"background:#e3f2fd;padding:8px;border-radius:6px;font-size:12px;\">${a.aiSummary}</p>` : \"\"}\n  </div>`).join('')\n}\n<p style=\"font-size:11px;color:#aaa;margin-top:24px;\">\n  <a href=\"{{ $env.BACKEND_URL }}/subscribe/unsubscribe/{{ $json.unsubToken }}\"\n    style=\"color:#aaa;\">Unsubscribe</a>\n</p></div>"
+      },
+      "name": "Send Digest Email",
+      "type": "n8n-nodes-base.emailSend",
+      "position": [1300, 300]
+    }
+  ],
+  "connections": {
+    "Cron — 8AM Daily":          { "main": [[{ "node": "Fetch Top 10 News" }]] },
+    "Fetch Top 10 News":          { "main": [[{ "node": "Fetch Verified Subscribers" }]] },
+    "Fetch Verified Subscribers": { "main": [[{ "node": "Group by Preferences" }]] },
+    "Group by Preferences":       { "main": [[{ "node": "SplitInBatches" }]] },
+    "SplitInBatches":             { "main": [[{ "node": "Send Digest Email" }]] }
+  }
+}
