@@ -2,6 +2,27 @@ const express = require('express');
 const { z }   = require('zod');
 const User    = require('../models/User');
 const router  = express.Router();
+
+// 🔒 Middleware
+const internalOnly = (req, res, next) => {
+  if (req.headers['x-internal-key'] !== process.env.INTERNAL_API_KEY) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  next();
+};
+
+// ✅ Protected route
+router.get('/active', internalOnly, async (req, res) => {
+  try {
+    const subs = await User.find({
+      isVerified: true
+    }).select('email unsubscribeToken preferences');
+
+    res.json(subs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
  
 const subscribeSchema = z.object({
   email:      z.string().email(),
