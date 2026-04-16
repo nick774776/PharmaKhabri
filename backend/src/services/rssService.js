@@ -27,14 +27,15 @@ async function fetchRSSFeeds() {
     try {
       const data = await parser.parseURL(feed.url);
       for (const item of data.items) {
-        if (!item.title || !item.link) continue;
+        let itemTitle = typeof item.title === 'string' ? item.title : (item.title && item.title._ ? item.title._ : String(item.title));
+        if (!itemTitle || !item.link) continue;
         const norm = {
-          title:       item.title.trim(),
+          title:       itemTitle.trim(),
           description: item.contentSnippet || item.summary || "",
           url:         item.link,
-          contentHash: md5(`${item.title.trim()}${feed.source}`),
+          contentHash: md5(`${itemTitle.trim()}${feed.source}`),
           source:      feed.source,
-          category:    categorize(`${item.title} ${item.contentSnippet || ""}`),
+          category:    categorize(`${itemTitle} ${item.contentSnippet || ""}`),
           image:       item.enclosure?.url || item["media:content"]?.$.url || null,
           publishedAt: new Date(item.pubDate || item.isoDate || Date.now()),
         };

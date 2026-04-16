@@ -138,7 +138,7 @@ export default function HomePage() {
           <span style={{fontStyle:'italic', color:'var(--accent)', letterSpacing:'1px'}}>दवा की दुनिया की ख़बर</span>
           <span>Vol. CXLVIII No. 102</span>
         </div>
-        <div className="masthead-name">Pharma Khabri</div>
+        <div className="masthead-name">Pharma ख़बरी</div>
         <div className="masthead-tagline">India&apos;s Journal of Pharmaceutical & Biotech Intelligence</div>
         
         <div className="masthead-bottom">
