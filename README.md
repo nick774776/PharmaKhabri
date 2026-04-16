@@ -1,6 +1,15 @@
 # PharmaKhabri 💊📰
 
-A full-stack pharmaceutical news aggregator application. It automatically fetches the latest news from various sources and presents them in a clean, modern user interface.
+## 🔍 What is PharmaKhabri?
+It’s a modern, automated platform that centralizes the latest news from diverse pharmaceutical sources into a clean, intuitive dashboard. No more manual searching; the insights come to you.
+
+## ⚙️ How it Works (The Workflow)
+I’ve integrated a robust tech stack to ensure the data is fresh, unique, and actionable:
+
+- **Automated Ingestion:** An ingestion worker runs every 2 hours, fetching data from various RSS feeds and News APIs (PubMed, FDA).
+- **Smart Deduplication:** Using MD5 hashing (Title + Source), the system ensures no duplicate stories clutter your feed.
+- **Data Integrity:** News is stored and managed in MongoDB Atlas, with a REST API serving the data to a sleek Next.js frontend.
+- **Daily Digest:** An n8n automation workflow runs every morning at 08:00 to fetch the top 10 stories and send a personalized email digest to subscribers.
 
 ## 📸 Sneak Peek
 ![PharmaKhabri Demo](Screenshot%202026-04-17%20015408.png)
