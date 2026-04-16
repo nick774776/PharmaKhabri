@@ -1,4 +1,4 @@
-# PharmaKhabar
+# PharmaKhabri
 
 A full-stack pharmaceutical news aggregator application. It automatically fetches the latest news from various sources and presents them in a clean, modern user interface.
 
