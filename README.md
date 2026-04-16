@@ -1,21 +1,31 @@
-# PharmaKhabri
+# PharmaKhabri 💊📰
 
 A full-stack pharmaceutical news aggregator application. It automatically fetches the latest news from various sources and presents them in a clean, modern user interface.
 
-## System Architecture
+## 📸 Sneak Peek
+![PharmaKhabri Demo](Screenshot%202026-04-17%20015408.png)
+
+## 🚀 Features
+- **Automated Aggregation:** Ingests the latest pharmaceutical news periodically using background jobs.
+- **Modern UI:** Responsive, clean interface built with Next.js and Tailwind CSS.
+- **Robust Backend:** Node.js & Express API for robust data delivery.
+- **Reliable Queuing:** Redis & BullMQ handle ingestion smoothly.
+- **Workflow Automation:** Integrated with n8n for advanced digest and notification workflows.
+
+## 🏗️ System Architecture
 
 - **Frontend:** Next.js (React), Tailwind CSS
 - **Backend:** Node.js, Express, MongoDB
 - **Job Processing:** BullMQ & Redis (for background news ingestion)
 - **Workflows:** n8n (optional automation workflows)
 
-## Project Structure
+## 📂 Project Structure
 
 - `frontend/` - Contains the Next.js UI application
 - `backend/` - Contains the Express API and ingestion services
 - `n8n/` - Automation workflows
 
-## Getting Started
+## 🛠️ Getting Started
 
 ### Prerequisites
 - Node.js (v18+)
@@ -56,6 +66,6 @@ A full-stack pharmaceutical news aggregator application. It automatically fetche
 
 The frontend will be available at `http://localhost:3000` and the backend at `http://localhost:4000`.
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
