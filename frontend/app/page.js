@@ -298,7 +298,7 @@ export default function HomePage() {
       </main>
 
       <footer>
-        <div className="f-copy">© 2026 Pharma Khabri Media Pvt. Ltd.</div>
+        <div className="f-copy">Developed by Nikhil Kumar</div>
         <div className="f-name">Pharma Khabri</div>
         <div className="f-links">
           <a href="#">About</a>
