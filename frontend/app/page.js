@@ -28,6 +28,7 @@ function RelativeTime({ dateString }) {
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('All');
+  const [contactOpen, setContactOpen] = useState(false);
   const { data, isLoading } = useNews({ category: mapTabToCategory(activeTab), page: 1 });
   
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -115,6 +116,44 @@ export default function HomePage() {
         </div>
       </div>
 
+      <div className={`contact-overlay ${contactOpen ? 'open' : ''}`} onClick={(e) => { if(e.target === e.currentTarget) setContactOpen(false); }}>
+        <div className="contact-card">
+          <button className="contact-close" onClick={() => setContactOpen(false)}>×</button>
+          <div className="contact-left">
+            <div className="contact-photo-wrap">
+              <img src="/profile.png" alt="Nikhil Kumar" style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+              <div className="contact-badge-floating">
+                🎓 NIPER Mohali - M.S Pharm
+              </div>
+            </div>
+            <div style={{marginTop: '24px', textAlign: 'center'}}>
+              <a href="https://nikhilkumar7.netlify.app/" target="_blank" rel="noreferrer" style={{color: '#00ffcc', textDecoration: 'none', fontFamily: 'var(--font-crimson), serif', fontSize: '15px', borderBottom: '1px solid rgba(0,255,204,0.3)', paddingBottom: '2px', transition: 'border-color 0.2s'}}>
+                View Portfolio ↗
+              </a>
+            </div>
+          </div>
+          <div className="contact-right">
+            <h2>Pharmacologist. AI<br/>Enthusiast.</h2>
+            <p>
+              I&apos;m a graduate researcher at the <b>National Institute of Pharmaceutical Education and Research (NIPER)</b>, perusing M.S (Pharm.) in Pharmacology & Regulatory Toxicology. Beyond the lab, I build AI agents, automate data workflows, and translate complex research into actionable insights.
+            </p>
+            <p>
+              My work sits at the intersection of <b>pharmaceutical intelligence, AI automation, and data analytics</b> — driven by a product mindset shaped through competitive consulting.
+            </p>
+            <div className="contact-badges">
+              <span className="contact-badge">🤖 AI Agents</span>
+              <span className="contact-badge">💊 Pharmacology</span>
+              <span className="contact-badge">📊 Data Analytics</span>
+              <span className="contact-badge">🔬 Drug Discovery</span>
+              <span className="contact-badge">⚡ Automation</span>
+              <span className="contact-badge">🏛 Regulatory Affairs</span>
+              <span className="contact-badge">🧬 HEOR</span>
+              <span className="contact-badge">🎯 Product Management</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="ticker-wrap">
         <div className="ticker-label">Breaking</div>
         <div style={{overflow:'hidden', flex:1}}>
@@ -148,6 +187,9 @@ export default function HomePage() {
                 {tab}
               </button>
             ))}
+            <button className="nav-tab" onClick={() => setContactOpen(true)} style={{color: 'var(--accent)'}}>
+              CONTACT
+            </button>
           </nav>
           <div style={{display:'flex', gap:'8px', alignItems:'center'}}>
             <div className="nav-search" data-tip="Press ⌘K">

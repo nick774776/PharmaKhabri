@@ -27,7 +27,14 @@ async function fetchRSSFeeds() {
     try {
       const data = await parser.parseURL(feed.url);
       for (const item of data.items) {
-        let itemTitle = typeof item.title === 'string' ? item.title : (item.title && item.title._ ? item.title._ : String(item.title));
+        let itemTitle = "";
+        if (typeof item.title === 'string') {
+          itemTitle = item.title;
+        } else if (item.title && typeof item.title === 'object') {
+          itemTitle = item.title._ || "";
+        } else if (item.title != null) {
+          try { itemTitle = String(item.title); } catch (e) { itemTitle = ""; }
+        }
         if (!itemTitle || !item.link) continue;
         const norm = {
           title:       itemTitle.trim(),
