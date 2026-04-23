@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNews } from '@/hooks/useNews';
 import { formatDistanceToNow } from 'date-fns';
 
-const TABS = ['All', 'FDA', 'Clinical Trials', 'Biotech', 'Regulations', 'Research'];
+const TABS = ['All', 'FDA', 'Clinical Trials', 'Biotech', 'Regulations', 'Research', 'Pharmacology'];
 const mapTabToCategory = (tab) => {
   if(tab === 'All') return '';
   if(tab === 'FDA') return 'fda';
