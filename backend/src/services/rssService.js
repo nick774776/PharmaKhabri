@@ -16,6 +16,7 @@ const RSS_FEEDS = [
   { url: 'https://www.who.int/rss-feeds/news-english.xml',source: 'WHO'            },
   { url: 'https://pubmed.ncbi.nlm.nih.gov/rss/search/pharma/?limit=20', source: 'PubMed' },
   { url: 'https://www.nature.com/subjects/pharmacology.rss', source: 'Nature Pharmacology' },
+  { url: 'https://pharma.economictimes.indiatimes.com/rss/topstories', source: 'ET Pharma' },
 ];
  
 function categorize(text = "", source = "") {
@@ -26,6 +27,7 @@ function categorize(text = "", source = "") {
   if (/biotech|biologic|mab\b|gene therapy/.test(t))          cats.push('biotech');
   if (/regulation|policy|guideline|compliance/.test(t))        cats.push('regulations');
   if (/pharmacology/.test(t) || source === 'Nature Pharmacology') cats.push('pharmacology');
+  if (source === 'ET Pharma') cats.push('et-pharma');
   return cats.length ? cats : ['general'];
 }
  

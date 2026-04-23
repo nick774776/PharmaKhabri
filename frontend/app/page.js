@@ -3,11 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { useNews } from '@/hooks/useNews';
 import { formatDistanceToNow } from 'date-fns';
 
-const TABS = ['All', 'FDA', 'Clinical Trials', 'Biotech', 'Regulations', 'Research', 'Pharmacology'];
+const TABS = ['All', 'FDA', 'Clinical Trials', 'Biotech', 'Regulations', 'Research', 'Pharmacology', 'ET Pharma'];
 const mapTabToCategory = (tab) => {
   if(tab === 'All') return '';
   if(tab === 'FDA') return 'fda';
   if(tab === 'Clinical Trials') return 'clinical-trials';
+  if(tab === 'ET Pharma') return 'et-pharma';
   return tab.toLowerCase();
 };
 
